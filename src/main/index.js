@@ -2,6 +2,7 @@ import { app, Menu, ipcMain } from 'electron'
 import { createMainWindow, mainWindow } from './main'
 import { createTray, destroyTray } from './tray'
 import store from './store'
+import db from '../renderer/datastore'
 import mainMenu from './lib/main-menu'
 import { initAnalytics } from './lib/analytics'
 const isDev = process.env.NODE_ENV === 'development'
@@ -16,9 +17,9 @@ if (!isDev) {
     .replace(/\\/g, '\\\\')
 }
 
-function init () {
-  createMainWindow()
-
+async function init () {
+  await createMainWindow()
+  console.log('main', mainWindow)
   const menu = Menu.buildFromTemplate(mainMenu(mainWindow))
   Menu.setApplicationMenu(menu)
 }
@@ -40,7 +41,9 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-  store.set('bounds', mainWindow.getBounds())
+  const bounds = mainWindow.getBounds()
+  db.masscode.update({ _id: 'app' }, { bounds })
+  // store.set('bounds', mainWindow.getBounds())
 })
 
 app.on('activate', () => {

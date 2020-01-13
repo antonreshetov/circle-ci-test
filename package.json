@@ -74,6 +74,7 @@
     "fs-extra": "^8.1.0",
     "interactjs": "^1.8.0-alpha.6",
     "lodash-es": "^4.17.15",
+    "merge-deep": "^3.0.2",
     "monaco-editor": "^0.19.0",
     "monaco-editor-webpack-plugin": "^1.8.1",
     "mousetrap": "^1.6.3",

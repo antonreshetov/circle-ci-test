@@ -1,3 +1,5 @@
+import { homedir } from 'os'
+
 const Store = require('electron-store')
 
 const store = new Store({
@@ -31,10 +33,12 @@ const store = new Store({
       default: 'updateAt'
     },
     storagePath: {
+      //
       type: 'string',
-      default: 'updateAt'
+      default: homedir() + '/massCode2'
     },
     theme: {
+      //
       type: 'string',
       default: 'dark'
     },
@@ -49,6 +53,19 @@ const store = new Store({
     preferences: {
       type: 'object',
       properties: {
+        storagePath: {
+          type: 'string',
+          default: homedir() + '/massCode2'
+        },
+        interface: {
+          type: 'object',
+          properties: {
+            theme: {
+              type: 'string',
+              default: 'dark'
+            }
+          }
+        },
         assistant: {
           type: 'object',
           properties: {
@@ -67,8 +84,16 @@ const store = new Store({
   }
 })
 
+// store.delete('preferences')
+
 if (!store.get('preferences')) {
-  store.set('preferences', { assistant: {} })
+  store.set('preferences', {
+    interface: {},
+    assistant: {}
+  })
 }
+
+console.log(store.get('properties.storagePath'))
+// console.log(store.store)
 
 export default store

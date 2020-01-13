@@ -37,68 +37,93 @@ export default {
     async initState () {
       await this.setDefaultDataStore()
 
-      const snippetListWidth = this.$electronStore.get('snippetListWidth')
-      const sidebarWidth = this.$electronStore.get('sidebarWidth')
-      const selectedFolderId = this.$electronStore.get('selectedFolderId')
-      const selectedSnippetId = this.$electronStore.get('selectedSnippetId')
-      const theme = this.$electronStore.get('theme')
-      const snippetsSort = this.$electronStore.get('snippetsSort')
+      const app = await this.$db.masscode.findOneAsync({ _id: 'app' })
+      const preferences = await this.$db.masscode.findOneAsync({
+        _id: 'preferences'
+      })
+      console.log(app)
+      console.log(preferences)
 
-      if (snippetListWidth) {
-        this.$store.commit('app/SET_SNIPPET_LIST_WIDTH', snippetListWidth)
+      const storagePath = this.$electronStore.get('storagePath')
+
+      this.$store.commit('app/SET_STORAGE_PATH', storagePath)
+
+      console.log(storagePath)
+
+      // const snippetListWidth = this.$electronStore.get('snippetListWidth')
+      // const sidebarWidth = this.$electronStore.get('sidebarWidth')
+      // const selectedFolderId = this.$electronStore.get('selectedFolderId')
+      // const selectedSnippetId = this.$electronStore.get('selectedSnippetId')
+      // const theme = this.$electronStore.get('theme')
+      // const snippetsSort = this.$electronStore.get('snippetsSort')
+
+      if (app.snippetListWidth) {
+        this.$store.commit('app/SET_SNIPPET_LIST_WIDTH', app.snippetListWidth)
       }
 
-      if (sidebarWidth) {
-        this.$store.commit('app/SET_SIDEBAR_WIDTH', sidebarWidth)
+      if (app.sidebarWidth) {
+        this.$store.commit('app/SET_SIDEBAR_WIDTH', app.sidebarWidth)
       }
 
-      if (selectedFolderId) {
-        this.$store.dispatch('folders/setSelectedFolder', selectedFolderId)
+      if (app.selectedFolderId) {
+        this.$store.dispatch('folders/setSelectedFolder', app.selectedFolderId)
 
         const defaultQuery = { folderId: { $in: this.selectedIds } }
-        const query = defaultLibraryQuery(defaultQuery, selectedFolderId)
+        const query = defaultLibraryQuery(defaultQuery, app.selectedFolderId)
 
         this.$store.dispatch('snippets/getSnippets', query)
       } else {
         this.$store.dispatch('snippets/getSnippets', { folderId: null })
       }
 
-      if (selectedSnippetId) {
-        this.$db.snippets.findOne({ _id: selectedSnippetId }, (err, doc) => {
-          if (err) return
-          if (doc) {
-            this.$store.dispatch('snippets/setSelected', doc)
+      if (app.selectedSnippetId) {
+        this.$db.snippets.findOne(
+          { _id: app.selectedSnippetId },
+          (err, doc) => {
+            if (err) return
+            if (doc) {
+              this.$store.dispatch('snippets/setSelected', doc)
+            }
           }
-        })
+        )
       }
 
-      if (theme) {
-        this.$store.dispatch('app/setTheme', theme)
-      }
+      // if (pretheme) {
+      this.$store.dispatch('app/setTheme', preferences.interface.theme)
+      // }
 
-      if (snippetsSort) {
-        this.$store.dispatch('snippets/setSort', snippetsSort)
-      }
+      // if (snippetsSort) {
+      this.$store.dispatch('snippets/setSort', app.snippetsSort)
+      // }
 
       this.$store.commit('app/SET_INIT', true)
     },
     async setDefaultDataStore () {
-      const defaultFolder = {
-        list: [
-          {
-            id: shortid(),
-            name: 'Default',
-            open: false,
-            defaultLanguage: 'text'
-          }
-        ],
-        _id: 'folders'
-      }
+      // const defaultFolder = {
+      //   list: [
+      //     {
+      //       id: shortid(),
+      //       name: 'Default',
+      //       open: false,
+      //       defaultLanguage: 'text'
+      //     }
+      //   ],
+      //   _id: 'folders'
+      // }
 
-      this.$db.masscode.insert(defaultFolder, (err, doc) => {
-        if (err) return
-        this.$store.dispatch('folders/getFolders')
-      })
+      // this.$db.masscode.findOne({ _id: 'settings' }, (err, doc) => {
+      //   if (err) return
+
+      //   if (!doc) {
+      //     this.$db.masscode.insert(defaultSettings)
+      //     this.$db.masscode.update({ _id: 'settings' }, { $set: { 'preferences.assistant.enable': false } })
+      //   }
+      // })
+
+      // this.$db.masscode.insert([defaultFolder], (err, doc) => {
+      //   if (err) return
+      //   this.$store.dispatch('folders/getFolders')
+      // })
 
       await this.$store.dispatch('folders/getFolders')
     }

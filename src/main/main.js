@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron'
 import store from './store'
+import db from '../renderer/datastore'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -9,11 +10,23 @@ const winURL =
     ? 'http://localhost:9080'
     : `file://${__dirname}/index.html`
 
-function createMainWindow () {
+function getAppData () {
+  return new Promise((resolve, reject) => {
+    db.masscode.findOne({ _id: 'app' }, (err, doc) => {
+      if (err) reject(err)
+      resolve(doc)
+    })
+  })
+}
+
+async function createMainWindow () {
+  const settings = await db.masscode.findOneAsync({ _id: 'app' })
+
   const bounds = {
     height: 563,
     width: 1000,
-    ...store.get('bounds')
+    ...settings.bounds
+    // ...store.get('bounds')
   }
 
   mainWindow = new BrowserWindow({
@@ -34,6 +47,11 @@ function createMainWindow () {
 
   mainWindow.on('closed', e => {
     mainWindow = null
+  })
+
+  mainWindow.on('close', () => {
+    const bounds = mainWindow.getBounds()
+    db.masscode.update({ _id: 'app' }, { bounds })
   })
 }
 

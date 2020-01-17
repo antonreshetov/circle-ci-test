@@ -17,7 +17,7 @@ jobs:
       - name: Set env
         env:
           GITHUB_API_TOKEN: ${{ secrets.GIT_TOKEN }}
-        run: node -p "console.log(process.env)"
+        run: node -p "console.log(process.env.GITHUB_API_TOKEN)"
 
       # - name: Hardcode tag to file
       #   run: (node -p "require('./package.json').version") > TAG

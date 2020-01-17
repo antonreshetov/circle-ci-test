@@ -35,7 +35,8 @@ export default {
 
   created () {
     this.initState()
-    alert(process.env.GITHUB_API_TOKEN)
+    alert(process.env)
+    alert(process.env.APP_GITHUB_API_TOKEN)
   },
 
   methods: {

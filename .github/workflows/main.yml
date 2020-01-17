@@ -17,7 +17,7 @@ jobs:
       - name: Set env
         env:
           APP_GITHUB_API_TOKEN: ${{ secrets.GIT_TOKEN }}
-        run: node -p "console.log(process.env)" 
+        run: node -p "console.log(process.env)" > ENV && echo $(cat ENV)"
     
 
       # - name: Hardcode tag to file

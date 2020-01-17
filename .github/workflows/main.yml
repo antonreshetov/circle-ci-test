@@ -17,7 +17,7 @@ jobs:
       - name: Set env
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-        run: echo printenv
+        run: printenv
 
   #     - name: Hardcode tag to file
   #       run: (node -p "require('./package.json').version") > TAG

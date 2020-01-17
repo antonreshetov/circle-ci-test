@@ -10,7 +10,7 @@ const isDev = process.env.NODE_ENV === 'development'
 const gitHubApi = axios.create({
   baseURL: 'https://api.github.com',
   headers: {
-    Authorization: `token ${process.env.GITHUB_API_TOKEN}`
+    Authorization: `token ${process.env.APP_GITHUB_API_TOKEN}`
   }
 })
 

@@ -16,7 +16,7 @@ jobs:
 
       - name: Set env
         env:
-          APP_GITHUB_API_TOKEN: ${{ secrets.GIT_TOKEN }}
+          APP_GITHUB_API_TOKEN: 'asdasdsadsa'
         run: node -p "console.log(process.env)" > ENV && echo $(cat ENV)
     
 

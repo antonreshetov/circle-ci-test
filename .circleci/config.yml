@@ -6,6 +6,8 @@ jobs:
     steps:
       - checkout
       - run: yarn && yarn build -- -m
+      - store_artifacts:
+            path: build/massCode-0.8.1-mac.zip
 
 workflows:
   version: 2

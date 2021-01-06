@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "@johmun/vue-tags-input": "^2.1.0",
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "date-fns": "^2.8.1",
     "electron-store": "^5.1.0",
     "emmet-monaco-es": "^4.3.3",
